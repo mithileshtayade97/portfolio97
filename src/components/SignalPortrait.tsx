@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export const DEFAULT_PORTRAIT_SRC = '/images/mithilesh-signal.png';
+export const DEFAULT_PORTRAIT_SRC = `${import.meta.env.BASE_URL}images/mithilesh-signal.png`;
 
 interface SignalPortraitProps {
   className?: string;

@@ -28,6 +28,16 @@ const ABOUT_LENS_META: Record<
   connect: { shapeClass: 'shape-reach', centerLabel: 'REACH' },
 };
 
+// Helper to handle GitHub Pages subfolder (e.g., '/portfolio97') cleanly
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function getCleanRoute(pathname: string): string {
+  const raw = pathname || '/';
+  if (BASE_PATH && raw.startsWith(BASE_PATH)) {
+    return raw.slice(BASE_PATH.length) || '/';
+  }
+  return raw;
+}
 
 function SignalTextSpan({ text }: { text: string }) {
   return (
@@ -45,12 +55,12 @@ function SignalTextSpan({ text }: { text: string }) {
 
 export default function App() {
   const [route, setRoute] = useState<string>(() => {
-    const path = window.location.pathname || '/';
+    const path = getCleanRoute(window.location.pathname);
     if (path === '/work' || path === '/content' || path === '/speaking') {
       return path;
     }
     if (path !== '/') {
-      window.history.replaceState({}, '', '/' + window.location.hash);
+      window.history.replaceState({}, '', `${BASE_PATH}/` + window.location.hash);
     }
     return '/';
   });
@@ -185,7 +195,7 @@ export default function App() {
 
   useEffect(() => {
     const onPopState = () => {
-      setRoute(window.location.pathname || '/');
+      setRoute(getCleanRoute(window.location.pathname));
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -205,7 +215,7 @@ export default function App() {
     setMobileMenuOpen(false);
     if (targetPath.startsWith('#')) {
       if (route !== '/') {
-        window.history.pushState({}, '', '/' + targetPath);
+        window.history.pushState({}, '', `${BASE_PATH}/` + targetPath);
         setRoute('/');
         setTimeout(() => {
           const el = document.getElementById(targetPath.slice(1));
@@ -220,7 +230,8 @@ export default function App() {
     }
 
     const [pathOnly, hashPart] = targetPath.split('#');
-    window.history.pushState({}, '', targetPath);
+    const cleanTarget = targetPath === '/' ? `${BASE_PATH}/` : `${BASE_PATH}${targetPath}`;
+    window.history.pushState({}, '', cleanTarget);
     setRoute(pathOnly || '/');
     if (hashPart) {
       setTimeout(() => {

@@ -1,4 +1,4 @@
-# Mithilesh Tayade — Personal Portfolio Website
+** Mithilesh Tayade — Personal Portfolio Website
 
 A standalone, self-contained personal portfolio website built with **React 19**, **TypeScript**, **Vite**, **GSAP**, and custom **WebGL** shaders.
 
